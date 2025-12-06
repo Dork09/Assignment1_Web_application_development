@@ -8,7 +8,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const postRoutes = require("./routes/postRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 app.use("/post", postRoutes);
+app.use("/comment", commentRoutes);
 
 const PORT = process.env.PORT;
 
