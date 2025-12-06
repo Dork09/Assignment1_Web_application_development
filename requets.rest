@@ -1,0 +1,24 @@
+###
+GET http://localhost:3000/post
+
+###
+POST http://localhost:3000/post
+Content-Type: application/json
+
+{
+    "post_id": 1,
+    "sender_id": 1
+}
+###
+GET http://localhost:3000/post/1
+
+###
+PUT http://localhost:3000/post/1
+Content-Type: application/json
+
+{
+    "sender_id": 2
+}
+
+###
+DELETE http://localhost:3000/post/1
