@@ -6,7 +6,7 @@ POST http://localhost:3000/post
 Content-Type: application/json
 
 {
-    "post_id": 3,
+    "post_id": 6,
     "sender_id": 1
 }
 ###
