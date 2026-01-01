@@ -10,9 +10,11 @@ app.use(bodyParser.json());
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 app.use("/post", postRoutes);
 app.use("/comment", commentRoutes);
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 const PORT = process.env.PORT;
 

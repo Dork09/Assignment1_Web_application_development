@@ -1,6 +1,7 @@
 export {};
 
 const User = require("../model/userModel");
+const bcrypt = require("bcryptjs");
 
 async function nextUserId(): Promise<number> {
   const count = await User.countDocuments();
@@ -17,11 +18,13 @@ const createUser = async (req: any, res: any) => {
     const exists = await User.findOne({ email });
     if (exists) return res.status(409).json({ message: "Email already exists" });
 
+    const password = await bcrypt.hash(password_hash, 10);
+
     const user = await User.create({
       user_id: await nextUserId(),
       username,
       email,
-      password_hash,
+      password_hash:password,
     });
 
     // לא מחזירים סיסמה/רפרש החוצה
