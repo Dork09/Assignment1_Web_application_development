@@ -35,7 +35,7 @@ describe("Posts API Tests", () => {
     test("should create a new post successfully", async () => {
       const postData = {
         post_id: 9,
-        sender_id: 77
+        user_id: 77
       };
 
       const response = await request(app)
@@ -44,7 +44,7 @@ describe("Posts API Tests", () => {
         .expect(201);
 
       expect(response.body).toHaveProperty("post_id", 9);
-      expect(response.body).toHaveProperty("sender_id", 77);
+      expect(response.body).toHaveProperty("user_id", 77);
     });
   });
 
@@ -52,8 +52,8 @@ describe("Posts API Tests", () => {
     test("should get all posts", async () => {
       const Post = require("../model/postModel");
       await Post.create([
-        { post_id: 1, sender_id: 100 },
-        { post_id: 2, sender_id: 200 }
+        { post_id: 1, user_id: 100 },
+        { post_id: 2, user_id: 200 }
       ]);
 
       const response = await request(app)
@@ -68,14 +68,14 @@ describe("Posts API Tests", () => {
   describe("GET /post/:post_id - Get Post by ID", () => {
     test("should get a post by post_id", async () => {
       const Post = require("../model/postModel");
-      await Post.create({ post_id: 1, sender_id: 100 });
+      await Post.create({ post_id: 1, user_id: 100 });
 
       const response = await request(app)
         .get("/post/1")
         .expect(200);
 
       expect(response.body).toHaveProperty("post_id", 1);
-      expect(response.body).toHaveProperty("sender_id", 100);
+      expect(response.body).toHaveProperty("user_id", 100);
     });
 
     test("should return 404 if post not found", async () => {
@@ -98,10 +98,10 @@ describe("Posts API Tests", () => {
   describe("PUT /post/:post_id - Update Post", () => {
     test("should update a post successfully", async () => {
       const Post = require("../model/postModel");
-      await Post.create({ post_id: 1, sender_id: 100 });
+      await Post.create({ post_id: 1, user_id: 100 });
 
       const updateData = {
-        sender_id: 200
+        user_id: 200
       };
 
       const response = await request(app)
@@ -110,12 +110,12 @@ describe("Posts API Tests", () => {
         .expect(200);
 
       expect(response.body).toHaveProperty("post_id", 1);
-      expect(response.body).toHaveProperty("sender_id", 200);
+      expect(response.body).toHaveProperty("user_id", 200);
     });
 
     test("should return 404 if post not found", async () => {
       const updateData = {
-        sender_id: 200
+        user_id: 200
       };
 
       const response = await request(app)
@@ -130,7 +130,7 @@ describe("Posts API Tests", () => {
   describe("DELETE /post/:post_id - Delete Post", () => {
     test("should delete a post successfully", async () => {
       const Post = require("../model/postModel");
-      await Post.create({ post_id: 1, sender_id: 100 });
+      await Post.create({ post_id: 1, user_id: 100 });
 
       const response = await request(app)
         .delete("/post/1")

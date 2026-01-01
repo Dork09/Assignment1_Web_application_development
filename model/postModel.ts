@@ -2,13 +2,14 @@ export {};
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-  sender_id: {
+  user_id: {
     type: Number,
     required: true,
   },
   post_id: {
     type: Number,
     required: true,
+     unique: true,
   },
 });
 
