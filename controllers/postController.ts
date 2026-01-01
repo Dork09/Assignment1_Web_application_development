@@ -1,4 +1,5 @@
-const Post = require("../model/postModel.js");
+export {};
+const Post = require("../model/postModel");
 
 const getPost = async (req, res) => { 
     try {

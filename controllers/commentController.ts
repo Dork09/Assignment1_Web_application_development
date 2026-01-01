@@ -1,4 +1,5 @@
-const Comment = require("../model/commentModel.js");
+export {};
+const Comment = require("../model/commentModel");
 
 const getComments = async (req, res) => {
   try {

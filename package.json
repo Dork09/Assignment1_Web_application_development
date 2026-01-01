@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
   "test": "jest --runInBand --detectOpenHandles --forceExit",
-  "dev": "nodemon --watch . --ext ts,js --exec \"node --env-file=.env_dev -r ts-node/register index.ts\""
+  "dev": "nodemon --watch . --ext ts,js --exec \"node --env-file=.env_dev -r ts-node/register index.ts\"",
+  "build": "tsc --noEmit"
 
 },
   "dependencies": {
