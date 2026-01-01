@@ -1,0 +1,26 @@
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "username": "dor",
+  "email": "dor123@gmail.com",
+  "password_hash": "12345789"
+}
+
+###
+GET http://localhost:3000/users
+
+###
+GET http://localhost:3000/users/1
+
+###
+DELETE http://localhost:3000/users/1
+
+###
+PUT http://localhost:3000/users/2
+Content-Type: application/json
+
+{
+    "username": "lironi"
+}
+

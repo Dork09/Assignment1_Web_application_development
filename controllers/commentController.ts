@@ -1,4 +1,5 @@
-const Comment = require("../model/commentModel.js");
+export {};
+const Comment = require("../model/commentModel");
 
 const getComments = async (req, res) => {
   try {
@@ -30,7 +31,7 @@ const getCommentsByPostId = async (req, res) => {
 // יצירת תגובה חדשה
 const createComment = async (req, res) => {
   try {
-    const { comment_id, post_id, comment } = req.body;
+    const { user_id,comment_id, post_id, comment } = req.body;
 
     if (!Number.isInteger(comment_id)) {
       return res.status(400).json({ error: "comment_id must be a number" });
@@ -48,7 +49,7 @@ const createComment = async (req, res) => {
       return res.status(409).json({ error: "comment_id already exists" });
     }
 
-    const newComment = await Comment.create({ comment_id, post_id, comment });
+    const newComment = await Comment.create({ user_id,comment_id, post_id, comment });
     return res.status(201).json(newComment);
   } catch (err) {
     return res.status(400).json({ error: err.message });

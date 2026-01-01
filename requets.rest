@@ -6,19 +6,19 @@ POST http://localhost:3000/post
 Content-Type: application/json
 
 {
-    "post_id": 6,
-    "sender_id": 1
+    "post_id": 9,
+    "user_id": 6
 }
 ###
-GET http://localhost:3000/post/1
+GET http://localhost:3000/post/3
 
 ###
 PUT http://localhost:3000/post/1
 Content-Type: application/json
 
 {
-    "sender_id": 2
+    "user_id": 55
 }
 
 ###
-DELETE http://localhost:3000/post/1
+DELETE http://localhost:3000/post/3

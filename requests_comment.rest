@@ -2,8 +2,8 @@ POST http://localhost:3000/comment
 Content-Type: application/json
 
 {
-  "comment_id": 3,
-  "post_id": 1,
+  "comment_id": 6,
+  "post_id": 4,
   "comment": "liron"
 }
 
@@ -14,13 +14,13 @@ GET http://localhost:3000/comment
 GET http://localhost:3000/comment/1
 
 ###
-DELETE http://localhost:3000/comment/3
+DELETE http://localhost:3000/comment/6
 
 ###
-PUT http://localhost:3000/comment/1
+PUT http://localhost:3000/comment/2
 Content-Type: application/json
 
 {
-    "comment": "changed"
+    "comment": "changed!!!!!"
 }
 
