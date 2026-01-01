@@ -11,10 +11,13 @@ const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const swaggerUi = require("swagger-ui-express");
+const { swaggerSpec } = require("./swagger");
 app.use("/post", postRoutes);
 app.use("/comment", commentRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = process.env.PORT;
 
