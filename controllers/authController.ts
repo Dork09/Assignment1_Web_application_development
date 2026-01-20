@@ -1,8 +1,6 @@
-export {};
-
-const User = require("../model/userModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import User from "../model/userModel.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // עוזרים לייצר טוקנים
 function signAccessToken(user_id: number) {
@@ -88,6 +86,6 @@ const logout = async (req: any, res: any) => {
     return res.status(204).send();
   }
 };
-module.exports = { login, logout };
+export { login, logout };
 
 

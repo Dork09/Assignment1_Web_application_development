@@ -2,9 +2,9 @@ POST http://localhost:3000/comment
 Content-Type: application/json
 
 {
-  "comment_id": 6,
-  "post_id": 4,
-  "comment": "liron"
+  "comment_id": 9,
+  "post_id": 1,
+  "comment": "Bla Bla"
 }
 
 ###

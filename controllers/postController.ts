@@ -1,5 +1,4 @@
-export {};
-const Post = require("../model/postModel");
+import Post from "../model/postModel.js";
 
 const getPost = async (req, res) => { 
     try {
@@ -85,7 +84,7 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getPost,
   getPostById,
   createPost,

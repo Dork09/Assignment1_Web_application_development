@@ -1,7 +1,5 @@
-export {};
-
-const User = require("../model/userModel");
-const bcrypt = require("bcryptjs");
+import User from "../model/userModel.js";
+import bcrypt from "bcryptjs";
 
 async function nextUserId(): Promise<number> {
   const count = await User.countDocuments();
@@ -82,4 +80,4 @@ const deleteUser = async (req: any, res: any) => {
   }
 };
 
-module.exports = { createUser, getUsers, getUserById, updateUser, deleteUser };
+export { createUser, getUsers, getUserById, updateUser, deleteUser };

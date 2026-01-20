@@ -1,5 +1,4 @@
-export {};
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
   comment_id: {
@@ -21,4 +20,4 @@ const commentSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Comment", commentSchema); // Comment is the name of the collection in the database
+export default mongoose.model("Comment", commentSchema); // Comment is the name of the collection in the database

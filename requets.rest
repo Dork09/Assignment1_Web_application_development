@@ -6,8 +6,9 @@ POST http://localhost:3000/post
 Content-Type: application/json
 
 {
-    "post_id": 5,
-    "user_id": 2
+    "post_id": 8,
+    "user_id": 2,
+    "sender_id": 100
 }
 ###
 GET http://localhost:3000/post/3
