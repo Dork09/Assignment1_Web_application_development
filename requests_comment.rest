@@ -2,16 +2,16 @@ POST http://localhost:3000/comment
 Content-Type: application/json
 
 {
-  "comment_id": 9,
-  "post_id": 1,
-  "comment": "Bla Bla"
+  "post_id": "6974af7ce5adc749ab67a553",
+  "user_id": 1,
+  "comment": "Bla Bla 4"
 }
 
 ###
 GET http://localhost:3000/comment
 
 ###
-GET http://localhost:3000/comment/1
+GET http://localhost:3000/comment/6974af64e5adc749ab67a551
 
 ###
 DELETE http://localhost:3000/comment/6

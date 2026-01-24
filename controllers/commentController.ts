@@ -1,4 +1,5 @@
 import Comment from "../model/commentModel.js";
+import mongoose from "mongoose";
 
 const getComments = async (req, res) => {
   try {
@@ -10,13 +11,13 @@ const getComments = async (req, res) => {
 };
 
 // GET /comment/:post_id
-// מחזיר את כל התגובות של פוסט לפי post_id מספרי
+// מחזיר את כל התגובות של פוסט לפי post_id (ObjectId)
 const getCommentsByPostId = async (req, res) => {
   try {
-    const postId = Number(req.params.post_id);
+    const postId = req.params.post_id;
 
-    if (!Number.isInteger(postId)) {
-      return res.status(400).json({ error: "post_id must be a number" });
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      return res.status(400).json({ error: "Invalid post_id format" });
     }
 
     const comments = await Comment.find({ post_id: postId });
@@ -30,25 +31,18 @@ const getCommentsByPostId = async (req, res) => {
 // יצירת תגובה חדשה
 const createComment = async (req, res) => {
   try {
-    const { user_id,comment_id, post_id, comment } = req.body;
+    const { user_id, post_id, comment } = req.body;
 
-    if (!Number.isInteger(comment_id)) {
-      return res.status(400).json({ error: "comment_id must be a number" });
-    }
-    if (!Number.isInteger(post_id)) {
-      return res.status(400).json({ error: "post_id must be a number" });
-    }
     if (!comment || typeof comment !== "string") {
       return res.status(400).json({ error: "comment is required" });
     }
 
-    // הגנה על כפילות comment_id
-    const exists = await Comment.findOne({ comment_id });
-    if (exists) {
-      return res.status(409).json({ error: "comment_id already exists" });
+    if (!post_id || !mongoose.Types.ObjectId.isValid(post_id)) {
+      return res.status(400).json({ error: "Valid post_id (ObjectId) is required" });
     }
 
-    const newComment = await Comment.create({ user_id,comment_id, post_id, comment });
+    // MongoDB will automatically generate _id (ObjectId) for the comment
+    const newComment = await Comment.create({ user_id, post_id, comment });
     return res.status(201).json(newComment);
   } catch (err) {
     return res.status(400).json({ error: err.message });
@@ -56,17 +50,17 @@ const createComment = async (req, res) => {
 };
 
 // PUT /comment/:comment_id
-// עדכון תגובה לפי comment_id מספרי
+// עדכון תגובה לפי comment_id (ObjectId)
 const updateComment = async (req, res) => {
   try {
-    const commentId = Number(req.params.comment_id);
+    const commentId = req.params.comment_id;
 
-    if (!Number.isInteger(commentId)) {
-      return res.status(400).json({ error: "comment_id must be a number" });
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ error: "Invalid comment_id format" });
     }
 
-    const updated = await Comment.findOneAndUpdate(
-      { comment_id: commentId },
+    const updated = await Comment.findByIdAndUpdate(
+      commentId,
       { $set: req.body },
       { new: true, runValidators: true }
     );
@@ -82,16 +76,16 @@ const updateComment = async (req, res) => {
 };
 
 // DELETE /comment/:comment_id
-// מחיקת תגובה לפי comment_id מספרי
+// מחיקת תגובה לפי comment_id (ObjectId)
 const deleteComment = async (req, res) => {
   try {
-    const commentId = Number(req.params.comment_id);
+    const commentId = req.params.comment_id;
 
-    if (!Number.isInteger(commentId)) {
-      return res.status(400).json({ error: "comment_id must be a number" });
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ error: "Invalid comment_id format" });
     }
 
-    const deleted = await Comment.findOneAndDelete({ comment_id: commentId });
+    const deleted = await Comment.findByIdAndDelete(commentId);
 
     if (!deleted) {
       return res.status(404).json({ error: "Comment not found" });

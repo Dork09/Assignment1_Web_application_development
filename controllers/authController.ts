@@ -42,9 +42,9 @@ const login = async (req: any, res: any) => {
     await user.save();
 
     //  להחזיר טוקנים
-    return res.status(200).json({ accessToken, refreshToken });
+    return res.status(200).json({ accessToken, refreshToken, user_id: user.user_id, username: user.username, email: user.email, success: true });
   } catch (err: any) {
-    return res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message, success: false });
   }
 };
 

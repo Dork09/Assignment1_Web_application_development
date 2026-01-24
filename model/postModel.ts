@@ -5,13 +5,24 @@ const postSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  post_id: {
-    type: Number,
+  url_image: {
+    type: String,
     required: true,
-     unique: true,
   },
-  sender_id: {
+  description: {
+    type: String,
+    required: false,
+  },
+  likes: {
     type: Number,
+    required: false,
+  },
+  created_at: {
+    type: Date,
+    required: true,
+  },
+  updated_at: {
+    type: Date,
     required: false,
   },
 });
