@@ -2,9 +2,9 @@ POST http://localhost:3000/comment
 Content-Type: application/json
 
 {
-  "post_id": "6974af7ce5adc749ab67a553",
-  "user_id": 1,
-  "comment": "Bla Bla 4"
+  "post_id": "69765d8b24a38a96a527e8e9",
+  "user_id": "69765c5124a38a96a527e8e0",
+  "comment": "Bla Bla 1"
 }
 
 ###

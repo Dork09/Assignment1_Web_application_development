@@ -32,6 +32,12 @@ const getPostById = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
+    const { user_id } = req.body;
+
+    if (!user_id || !mongoose.Types.ObjectId.isValid(user_id)) {
+      return res.status(400).json({ error: "Valid user_id (ObjectId) is required" });
+    }
+
     // MongoDB will automatically generate _id (ObjectId)
     const newPost = await Post.create(req.body);
     res.status(201).json(newPost);

@@ -37,6 +37,10 @@ const createComment = async (req, res) => {
       return res.status(400).json({ error: "comment is required" });
     }
 
+    if (!user_id || !mongoose.Types.ObjectId.isValid(user_id)) {
+      return res.status(400).json({ error: "Valid user_id (ObjectId) is required" });
+    }
+
     if (!post_id || !mongoose.Types.ObjectId.isValid(post_id)) {
       return res.status(400).json({ error: "Valid post_id (ObjectId) is required" });
     }

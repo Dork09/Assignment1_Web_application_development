@@ -1,13 +1,14 @@
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 // עוזרים לייצר טוקנים
-function signAccessToken(user_id: number) {
+function signAccessToken(user_id: string) {
   return jwt.sign({ sub: user_id }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" });
 }
 
-function signRefreshToken(user_id: number) {
+function signRefreshToken(user_id: string) {
   return jwt.sign({ sub: user_id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 }
 
@@ -34,15 +35,15 @@ const login = async (req: any, res: any) => {
     }
 
     // ליצור access + refresh
-    const accessToken = signAccessToken(user.user_id);
-    const refreshToken = signRefreshToken(user.user_id);
+    const accessToken = signAccessToken(user._id.toString());
+    const refreshToken = signRefreshToken(user._id.toString());
 
     // לשמור refresh ב-DB כ-hash (כדי שאפשר יהיה לבטל אותו ב-logout)
     user.refresh_token_hash = await bcrypt.hash(refreshToken, 10);
     await user.save();
 
     //  להחזיר טוקנים
-    return res.status(200).json({ accessToken, refreshToken, user_id: user.user_id, username: user.username, email: user.email, success: true });
+    return res.status(200).json({ accessToken, refreshToken, user_id: user._id, username: user.username, email: user.email, success: true });
   } catch (err: any) {
     return res.status(500).json({ message: err.message, success: false });
   }
@@ -68,14 +69,14 @@ const logout = async (req: any, res: any) => {
       return res.status(204).send();
     }
 
-    const user_id = Number(payload.sub);
-    if (!Number.isFinite(user_id)) {
+    const user_id = payload.sub;
+    if (!user_id || !mongoose.Types.ObjectId.isValid(user_id)) {
       return res.status(204).send();
     }
 
     // ביטול הסשן: מוחקים את ה-hash ששמור ב-DB
-    await User.updateOne(
-      { user_id },
+    await User.findByIdAndUpdate(
+      user_id,
       { $set: { refresh_token_hash: null } }
     );
 
