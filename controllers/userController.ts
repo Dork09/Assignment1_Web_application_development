@@ -27,6 +27,7 @@ const createUser = async (req: any, res: any) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      image_url: user.image_url,
     });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
@@ -35,7 +36,7 @@ const createUser = async (req: any, res: any) => {
 
 const getUsers = async (_req: any, res: any) => {
   try {
-    const users = await User.find().select("_id username email");
+    const users = await User.find().select("_id username email image_url");
     return res.json(users);
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
@@ -50,7 +51,7 @@ const getUserById = async (req: any, res: any) => {
       return res.status(400).json({ message: "Invalid user_id format" });
     }
 
-    const user = await User.findById(userId).select("_id username email");
+    const user = await User.findById(userId).select("_id username email image_url");
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.json(user);
   } catch (err: any) {
@@ -70,7 +71,7 @@ const updateUser = async (req: any, res: any) => {
       userId,
       req.body,
       { new: true, runValidators: true }
-    ).select("_id username email");
+    ).select("_id username email image_url");
 
     if (!updated) return res.status(404).json({ message: "User not found" });
     return res.json(updated);

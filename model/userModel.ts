@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema(
     // Auth
     password_hash: { type: String, required: true },
     refresh_token_hash: { type: String, default: null },
+    
+    // Profile image
+    image_url: { type: String, default: null },
   },
   { timestamps: true }
 );
