@@ -56,12 +56,12 @@ export {};
  *
  *     PostCreate:
  *       type: object
- *       required: [post_id, sender_id]
+ *       required: [post_id, user_id]
  *       properties:
  *         post_id:
  *           type: number
  *           example: 1
- *         sender_id:
+ *         user_id:
  *           type: number
  *           example: 100
  *     Post:

@@ -1,16 +1,31 @@
-export {};
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
   user_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
+  url_image: {
+    type: String,
     required: true,
   },
-  post_id: {
+  description: {
+    type: String,
+    required: false,
+  },
+  likes: {
     type: Number,
+    required: false,
+  },
+  created_at: {
+    type: Date,
     required: true,
-     unique: true,
+  },
+  updated_at: {
+    type: Date,
+    required: false,
   },
 });
 
-module.exports = mongoose.model("Post", postSchema); // Post is the name of the collection in the database
+export default mongoose.model("Post", postSchema); // Post is the name of the collection in the database

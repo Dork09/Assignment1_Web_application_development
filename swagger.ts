@@ -1,7 +1,5 @@
-export {};
-
-const swaggerJSDoc = require("swagger-jsdoc");
-const path = require("path");
+import swaggerJSDoc from "swagger-jsdoc";
+import path from "path";
 
 const docsPath = path.join(process.cwd(), "openapi.docs.ts").replace(/\\/g, "/");
 
@@ -16,4 +14,4 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
-module.exports = { swaggerSpec };
+export { swaggerSpec };

@@ -1,12 +1,7 @@
-export {};
-
-const User = require("../model/userModel");
-const bcrypt = require("bcryptjs");
-
-async function nextUserId(): Promise<number> {
-  const count = await User.countDocuments();
-  return count + 1;
-}
+import User from "../model/userModel.js";
+import Post from "../model/postModel.js";
+import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 const createUser = async (req: any, res: any) => {
   try {
@@ -20,8 +15,8 @@ const createUser = async (req: any, res: any) => {
 
     const password = await bcrypt.hash(password_hash, 10);
 
+    // MongoDB will automatically generate _id (ObjectId)
     const user = await User.create({
-      user_id: await nextUserId(),
       username,
       email,
       password_hash:password,
@@ -29,9 +24,10 @@ const createUser = async (req: any, res: any) => {
 
     // לא מחזירים סיסמה/רפרש החוצה
     return res.status(201).json({
-      user_id: user.user_id,
+      _id: user._id,
       username: user.username,
       email: user.email,
+      image_url: user.image_url,
     });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
@@ -40,7 +36,7 @@ const createUser = async (req: any, res: any) => {
 
 const getUsers = async (_req: any, res: any) => {
   try {
-    const users = await User.find().select("user_id username email");
+    const users = await User.find().select("_id username email image_url");
     return res.json(users);
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
@@ -49,7 +45,13 @@ const getUsers = async (_req: any, res: any) => {
 
 const getUserById = async (req: any, res: any) => {
   try {
-    const user = await User.findOne({ user_id: Number(req.params.user_id) }).select("user_id username email");
+    const userId = req.params.user_id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user_id format" });
+    }
+
+    const user = await User.findById(userId).select("_id username email image_url");
     if (!user) return res.status(404).json({ message: "User not found" });
     return res.json(user);
   } catch (err: any) {
@@ -59,11 +61,17 @@ const getUserById = async (req: any, res: any) => {
 
 const updateUser = async (req: any, res: any) => {
   try {
-    const updated = await User.findOneAndUpdate(
-      { user_id: Number(req.params.user_id) },
+    const userId = req.params.user_id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user_id format" });
+    }
+
+    const updated = await User.findByIdAndUpdate(
+      userId,
       req.body,
-      { new: true }
-    ).select("user_id username email");
+      { new: true, runValidators: true }
+    ).select("_id username email image_url");
 
     if (!updated) return res.status(404).json({ message: "User not found" });
     return res.json(updated);
@@ -74,7 +82,13 @@ const updateUser = async (req: any, res: any) => {
 
 const deleteUser = async (req: any, res: any) => {
   try {
-    const deleted = await User.findOneAndDelete({ user_id: Number(req.params.user_id) });
+    const userId = req.params.user_id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user_id format" });
+    }
+
+    const deleted = await User.findByIdAndDelete(userId);
     if (!deleted) return res.status(404).json({ message: "User not found" });
     return res.status(204).send();
   } catch (err: any) {
@@ -82,4 +96,22 @@ const deleteUser = async (req: any, res: any) => {
   }
 };
 
-module.exports = { createUser, getUsers, getUserById, updateUser, deleteUser };
+const getUserPosts = async (req: any, res: any) => {
+  try {
+    const userId = req.params.user_id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user_id format" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const posts = await Post.find({ user_id: userId });
+    return res.json(posts);
+  } catch (err: any) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export { createUser, getUsers, getUserById, updateUser, deleteUser, getUserPosts };

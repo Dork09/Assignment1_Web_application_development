@@ -1,13 +1,13 @@
-export {};
-const express = require("express");
-const router = express.Router();
-const commentController = require("../controllers/commentController");
+import express from "express";
+import * as commentController from "../controllers/commentController.js";
 
-router.get("/", commentController.getComments); //pass pointer to the function
-router.get("/:post_id", commentController.getCommentsByPostId); //pass pointer to the function
+const router = express.Router();
+
+router.get("/", commentController.getComments);
+router.get("/:post_id", commentController.getCommentsByPostId);
 
 router.post("/", commentController.createComment);
 router.put("/:comment_id", commentController.updateComment);
 router.delete("/:comment_id", commentController.deleteComment);
 
-module.exports = router;
+export default router;
