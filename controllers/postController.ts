@@ -1,4 +1,5 @@
 import Post from "../model/postModel.js";
+import PostLike from "../model/postLikeModel.js";
 import mongoose from "mongoose";
 
 const getPost = async (req, res) => { 
@@ -78,6 +79,9 @@ const deletePost = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(postId)) {
       return res.status(400).json({ error: "Invalid post_id format" });
     }
+
+    // Cascade delete: Delete all related PostLikes first
+    await PostLike.deleteMany({ post_id: postId });
 
     const deleted = await Post.findByIdAndDelete(postId);
 
