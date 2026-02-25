@@ -13,6 +13,8 @@ import authRoutes from "./routes/authRoutes.js";
 import multerRoutes from "./routes/multerRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
+import passport from "passport";
+import { initPassport } from "./controllers/passportConfig.js";
 
 const app = express();
 
@@ -25,6 +27,10 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// OAuth (Google)
+initPassport();
+app.use(passport.initialize());
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
