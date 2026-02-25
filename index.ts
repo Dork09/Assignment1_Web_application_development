@@ -11,6 +11,7 @@ import commentRoutes from "./routes/commentRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import multerRoutes from "./routes/multerRoutes.js";
+import likeRoutes from "./routes/likeRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
 import passport from "passport";
@@ -44,6 +45,7 @@ app.use("/comment", commentRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/upload", multerRoutes);
+app.use("/", likeRoutes);
 app.use("/public", express.static("public"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
