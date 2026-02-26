@@ -33,14 +33,26 @@ const getPostById = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const body = req.body ?? {};
+    const user_id = body.user_id;
+    const description = body.description;
 
     if (!user_id || !mongoose.Types.ObjectId.isValid(user_id)) {
       return res.status(400).json({ error: "Valid user_id (ObjectId) is required" });
     }
 
-    // MongoDB will automatically generate _id (ObjectId)
-    const newPost = await Post.create(req.body);
+    if (!req.file) {
+      return res.status(400).json({ error: "image file is required" });
+    }
+
+    const now = new Date();
+    const newPost = await Post.create({
+      user_id,
+      description,
+      url_image: `/uploads/${req.file.filename}`,
+      created_at: now,
+      updated_at: now,
+    });
     res.status(201).json(newPost);
   } catch (error) {
     res.status(500).json({ message: error.message });
