@@ -1,18 +1,21 @@
-export {};
-
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    user_id: { type: Number, required: true, unique: true, index: true },
     username: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
 
     // Auth
     password_hash: { type: String, required: true },
     refresh_token_hash: { type: String, default: null },
+
+    // External providers (optional)
+    google_id: { type: String, default: null, index: true },
+    
+    // Profile image
+    image_url: { type: String, default: null },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);
