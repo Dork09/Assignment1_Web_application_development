@@ -2,13 +2,13 @@ import Post from "../model/postModel.js";
 import PostLike from "../model/postLikeModel.js";
 import mongoose from "mongoose";
 
-const getPost = async (req, res) => { 
-    try {
-        const posts = await Post.find();
-        res.json(posts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+const getPost = async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 const getPostById = async (req, res) => {
@@ -62,17 +62,41 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const postId = req.params.post_id;
+    const currentUserId = req.user_id;
 
     if (!mongoose.Types.ObjectId.isValid(postId)) {
       return res.status(400).json({ error: "Invalid post_id format" });
     }
 
-    // החלפה/עדכון של שדות לפי מה שנשלח ב-body
-    const updated = await Post.findByIdAndUpdate(
-      postId,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    );
+    if (!currentUserId || !mongoose.Types.ObjectId.isValid(currentUserId)) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (String(post.user_id) !== String(currentUserId)) {
+      return res.status(403).json({ error: "You can only update your own posts" });
+    }
+
+    const body = req.body ?? {};
+    const updates: any = { updated_at: new Date() };
+
+    if (typeof body.description === "string") {
+      updates.description = body.description;
+    }
+
+    if (req.file?.filename) {
+      updates.url_image = `/uploads/${req.file.filename}`;
+    }
+
+    if (!("description" in updates) && !("url_image" in updates)) {
+      return res.status(400).json({ error: "At least one field (description/image) must be provided" });
+    }
+
+    const updated = await Post.findByIdAndUpdate(postId, { $set: updates }, { new: true, runValidators: true });
 
     if (!updated) {
       return res.status(404).json({ error: "Post not found" });
@@ -87,14 +111,26 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   try {
     const postId = req.params.post_id;
+    const currentUserId = req.user_id;
 
     if (!mongoose.Types.ObjectId.isValid(postId)) {
       return res.status(400).json({ error: "Invalid post_id format" });
     }
 
-    // Cascade delete: Delete all related PostLikes first
-    await PostLike.deleteMany({ post_id: postId });
+    if (!currentUserId || !mongoose.Types.ObjectId.isValid(currentUserId)) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (String(post.user_id) !== String(currentUserId)) {
+      return res.status(403).json({ error: "You can only delete your own posts" });
+    }
+
+    await PostLike.deleteMany({ post_id: postId });
     const deleted = await Post.findByIdAndDelete(postId);
 
     if (!deleted) {
@@ -107,10 +143,4 @@ const deletePost = async (req, res) => {
   }
 };
 
-export {
-  getPost,
-  getPostById,
-  createPost,
-  updatePost,
-  deletePost
-};
+export { getPost, getPostById, createPost, updatePost, deletePost };

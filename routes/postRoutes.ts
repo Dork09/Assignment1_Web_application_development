@@ -1,6 +1,7 @@
 import express from "express";
 import * as postController from "../controllers/postController.js";
 import multer from "multer";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -19,7 +20,7 @@ router.get("/:post_id", postController.getPostById); //pass pointer to the funct
 
 router.post("/", upload.single("image"), postController.createPost);
 
-router.put("/:post_id", postController.updatePost);
-router.delete("/:post_id", postController.deletePost);
+router.put("/:post_id", authenticateToken, upload.single("image"), postController.updatePost);
+router.delete("/:post_id", authenticateToken, postController.deletePost);
 
 export default router;
