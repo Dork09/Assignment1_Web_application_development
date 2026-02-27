@@ -16,11 +16,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get("/", postController.getPost); //pass pointer to the function
-router.get("/:post_id", postController.getPostById); //pass pointer to the function
+router.get("/:id/comments", postController.getPostComments);
+router.get("/:id/comments/count", postController.getPostCommentsCount);
+router.get("/:id", postController.getPostById); //pass pointer to the function
 
 router.post("/", upload.single("image"), postController.createPost);
+router.post("/:id/comments", authenticateToken, postController.createPostComment);
 
-router.put("/:post_id", authenticateToken, upload.single("image"), postController.updatePost);
-router.delete("/:post_id", authenticateToken, postController.deletePost);
+router.put("/:id", authenticateToken, upload.single("file"), postController.updatePost);
+router.delete("/:id", authenticateToken, postController.deletePost);
 
 export default router;
